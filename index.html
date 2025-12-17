@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataroid | Google Cloud Integration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        :root {
+            --primary: #4285F4; /* Google Blue */
+            --secondary: #34A853; /* Google Green */
+            --accent: #EA4335; /* Google Red */
+            --dark: #0F1419;
+            --dark-secondary: #1A2332;
+            --text: #E8EAED;
+            --text-secondary: #9AA0A6;
+            --card-bg: rgba(26, 35, 50, 0.8);
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark-secondary) 100%);
+            padding: 1.5rem 5%;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(66, 133, 244, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 2.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 6rem 5% 4rem;
+            background: radial-gradient(circle at 20% 50%, rgba(66, 133, 244, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(52, 168, 83, 0.08) 0%, transparent 50%),
+                        linear-gradient(180deg, var(--dark) 0%, var(--dark-secondary) 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .highlight {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .google-cloud-badge {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            padding: 0.8rem 1.5rem;
+            margin-top: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .google-cloud-badge i {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        /* Company Info */
+        .company-info {
+            padding: 4rem 5%;
+            background-color: var(--dark-secondary);
+        }
+
+        .company-info .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .company-text h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .company-text p {
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        .stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .company-logo {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(66, 133, 244, 0.1);
+        }
+
+        .company-logo h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .company-logo .website {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .company-logo .website:hover {
+            color: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        /* Google Cloud Integration */
+        .integration {
+            padding: 6rem 5%;
+            background-color: var(--dark);
+        }
+
+        .integration h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .integration-subtitle {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 2.5rem 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+            border-color: rgba(66, 133, 244, 0.3);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        .service-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .service-tag {
+            display: inline-block;
+            background: rgba(66, 133, 244, 0.1);
+            color: var(--primary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 6rem 5%;
+            background-color: var(--dark-secondary);
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 4rem;
+            color: white;
+        }
+
+        .steps {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .step:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .step-number {
+            min-width: 60px;
+            height: 60px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0 2rem;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+        }
+
+        .step-content {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            flex: 1;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .step-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 6rem 5%;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(66, 133, 244, 0.1) 0%, rgba(26, 35, 50, 0.8) 100%);
+        }
+
+        .cta h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .cta p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #3367d6;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(66, 133, 244, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            padding: 4rem 5% 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-column p, .footer-column a {
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--primary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .company-info .container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            
+            .stats {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .step {
+                flex-direction: column !important;
+                text-align: center;
+            }
+            
+            .step-number {
+                margin-bottom: 1.5rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <i class="fas fa-chart-network logo-icon"></i>
+                <span>Dataroid</span>
+            </div>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#integration">Integration</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>AI-Powered Digital Analytics on Google Cloud</h1>
+        <p>Dataroid leverages <span class="highlight">Google Cloud's advanced infrastructure</span> to deliver real-time customer insights, predictive analytics, and omnichannel engagement at enterprise scale.</p>
+        
+        <div class="google-cloud-badge">
+            <i class="fab fa-google"></i>
+            <span>Google Cloud Partner Solution</span>
+        </div>
+    </section>
+
+    <!-- Company Info -->
+    <section id="about" class="company-info">
+        <div class="container">
+            <div class="company-text">
+                <h2>About Dataroid</h2>
+                <p>Dataroid is an AI-powered enterprise-level digital analytics platform that helps enterprises to enhance every individual customer experience through deep customer insight, data science modelling, and omnichannel marketing.</p>
+                <p>The platform enables digital product owners and marketers to collect and analyze real-time customer interactions from web, mobile, and other customer channels, view unified user profiles, and create and distribute personalized messages across multiple engagement channels.</p>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <span class="stat-number">40M+</span>
+                        <span class="stat-label">Users Connected</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Real-time Analytics</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">AI</span>
+                        <span class="stat-label">Powered Insights</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="company-logo">
+                <h3>Dataroid Inc.</h3>
+                <div style="font-size: 5rem; color: var(--primary); margin: 1.5rem 0;">
+                    <i class="fas fa-analytics"></i>
+                </div>
+                <p>Istanbul, Turkey</p>
+                <a href="https://dataroid.xyz/" class="website" target="_blank">
+                    <i class="fas fa-external-link-alt"></i> dataroid.xyz
+                </a>
+                <p style="margin-top: 1rem;">Contact: fatih@dataroid.xyz</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Google Cloud Integration -->
+    <section id="integration" class="integration">
+        <h2>Google Cloud Integration</h2>
+        <p class="integration-subtitle">Dataroid is built on Google Cloud's robust infrastructure for scalability, security, and performance</p>
+        
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3>BigQuery Analytics</h3>
+                <p>Real-time data warehousing and analytics processing over 40 million user interactions with scalable, serverless architecture.</p>
+                <span class="service-tag">Data Analytics</span>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>AI & Machine Learning</h3>
+                <p>Predictive modeling for customer behavior and lifetime value forecasting using Google Cloud AI services.</p>
+                <span class="service-tag">AI/ML</span>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-server"></i>
+                </div>
+                <h3>Kubernetes Engine</h3>
+                <p>Resilient, auto-scaling microservices architecture powered by GKE for high availability and performance.</p>
+                <span class="service-tag">Infrastructure</span>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3>Pub/Sub & Cloud Functions</h3>
+                <p>Real-time event streaming and serverless automation for customer engagement workflows and triggers.</p>
+                <span class="service-tag">Event Processing</span>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Security & Compliance</h3>
+                <p>Enterprise-grade security with Google Cloud IAM, encryption, and compliance certifications for data protection.</p>
+                <span class="service-tag">Security</span>
+            </div>
+            
+            <div class="service-card">
+                <div class="service-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <h3>Workspace Integration</h3>
+                <p>Seamless collaboration via Google Workspace APIs for shared insights, automated reporting in Sheets & Docs.</p>
+                <span class="service-tag">Collaboration</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="how-it-works">
+        <h2>How Dataroid Works with Google Cloud</h2>
+        
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Data Collection & Ingestion</h3>
+                    <p>Customer interactions from web, mobile, and digital channels are collected in real-time and streamed to Google Cloud via Pub/Sub for immediate processing.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Unified Customer Profiles</h3>
+                    <p>BigQuery processes and unifies data into comprehensive customer profiles, enabling a 360-degree view of user behavior across all touchpoints.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>AI-Powered Analytics</h3>
+                    <p>Google Cloud AI services analyze customer data to generate predictive insights, segmentation models, and lifetime value forecasts.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Personalized Engagement</h3>
+                    <p>Cloud Functions trigger personalized omnichannel campaigns based on real-time insights, delivering relevant messages via email, push, SMS, and more.</p>
+                </div>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                    <h3>Performance Optimization</h3>
+                    <p>Continuous analysis of campaign performance with real-time dashboards, leveraging Google Cloud's scalable infrastructure for always-on availability.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="contact">
+        <h2>Ready to Transform Your Customer Experience?</h2>
+        <p>Join enterprises worldwide who trust Dataroid on Google Cloud to drive customer engagement and business growth.</p>
+        
+        <div class="cta-buttons">
+            <a href="https://dataroid.xyz/" class="btn btn-primary" target="_blank">
+                <i class="fas fa-external-link-alt"></i> Visit Our Website
+            </a>
+            <a href="mailto:fatih@dataroid.xyz" class="btn btn-secondary">
+                <i class="fas fa-envelope"></i> Contact Us
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Dataroid</h3>
+                <p>AI-powered digital analytics and customer engagement platform built on Google Cloud.</p>
+                <p>Helping businesses connect with over 40 million users worldwide.</p>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Google Cloud Services</h3>
+                <a href="#">BigQuery Analytics</a>
+                <a href="#">AI & Machine Learning</a>
+                <a href="#">Kubernetes Engine</a>
+                <a href="#">Cloud Pub/Sub</a>
+                <a href="#">Cloud Functions</a>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Contact Information</h3>
+                <p><i class="fas fa-globe"></i> dataroid.xyz</p>
+                <p><i class="fas fa-envelope"></i> fatih@dataroid.xyz</p>
+                <p><i class="fas fa-map-marker-alt"></i> Istanbul, Turkey</p>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Solution Qualification</h3>
+                <p>Dataroid is a certified Google Cloud Build Partner solution for digital analytics and customer engagement.</p>
+                <p>Status: Active / Live</p>
+                <p>Type: SaaS Analytics Platform</p>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            <p>&copy; 2023 Dataroid. All rights reserved. | Google Cloud is a trademark of Google LLC.</p>
+            <p style="margin-top: 0.5rem;">This website demonstrates Dataroid's Google Cloud integration for Build Partner qualification.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Add scroll effect to header
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if(window.scrollY > 50) {
+                header.style.backgroundColor = 'rgba(15, 20, 25, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.style.backgroundColor = '';
+                header.style.backdropFilter = '';
+            }
+        });
+        
+        // Animation for service cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe service cards
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(card);
+        });
+        
+        // Observe step items
+        document.querySelectorAll('.step').forEach(step => {
+            step.style.opacity = '0';
+            step.style.transform = 'translateX(-30px)';
+            step.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            observer.observe(step);
+            
+            // Alternate direction for even steps
+            if(step.querySelector('.step-number').textContent % 2 === 0) {
+                step.style.transform = 'translateX(30px)';
+            }
+        });
+    </script>
+</body>
+</html>
